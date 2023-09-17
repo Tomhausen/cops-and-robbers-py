@@ -1,0 +1,22 @@
+{
+    "image2": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAPAPAAAAAPD///6ARAAA/4/v7o9IAPD/iP/k/v8A8I/4v9GOiP//iPj+34SI/4+I+E7dhIgPj4j4Tt2EiA//iPj+34SI//CP+L/Rjoj/8P+I/+T+/wAA/4jv7o9IAADw///+gEQAAAAA8A8AAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "guard"
+    },
+    "image1": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAPAPAAAAAAD////w3QAA8P/////fAAD//93d//8AAP//HdH////w///93/////D//93d//8P8P//3d3//w/w///93////wD//x3R////AP//3d3//wAA8P/////fAAAA////8N0AAAAA8A8AAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "robber"
+    },
+    "image3": {
+        "data": "hwQQABAAAADgAAAAAAAADt0NAAAAANDdHQ0AAAAA0NEdDd3dDd3d0R3dERHREdHRHR3x8RHx0dEdHR8RHx/R0R0d8fER8dHRHR0fER8f0dEdHfHxEfHR0R0dHxEfH9HRHR0RHRER3dEd3d3Q3d3Q0R0NAAAAANDR3Q0AAAAA0N3gAAAAAAAADg==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "note"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
