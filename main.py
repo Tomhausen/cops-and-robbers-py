@@ -1,32 +1,79 @@
 # vars
 speed = 30
+code = ""
+opened_chest = False
 
 # sprites
 robber = sprites.create(assets.image("robber"), SpriteKind.player)
 controller.move_sprite(robber)
 scene.camera_follow_sprite(robber)
 
+def generate_code():
+    global code
+    code = str(randint(0, 9999))
+    while len(code) < 4:
+        code = "0" + code
+
 def setup_level():
+    global opened_chest
+    opened_chest = False
     scene.set_tile_map_level(assets.tilemap("level"))
     tiles.place_on_random_tile(robber, assets.tile("open door"))
     for i in range(randint(4, 8)):
         spawn_guard()
     tilesAdvanced.swap_all_tiles(assets.tile("guard spawn"), assets.tile("floor"))
+    note = sprites.create(assets.image("note"), SpriteKind.food)
+    tiles.place_on_random_tile(note, assets.tile("floor"))
+    generate_code()
 setup_level()
 
 def spawn_guard():
     guard = sprites.create(assets.image("guard"), SpriteKind.enemy)
     tiles.place_on_random_tile(guard, assets.tile("guard spawn"))
-    tiles.set_tile_at(guard.tilemap_location(), assets.tile("floor"))
     sprites.set_data_boolean(guard, "searching", False)
     idle_behaviour(guard, guard.tilemap_location())
 
-def reach_chest(robber, chest):
-    info.change_score_by(1000)
-    sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-    music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
-    setup_level()
-scene.on_overlap_tile(SpriteKind.player, assets.tile("chest"), reach_chest)
+def find_note(robber, note):
+    robber.say(code, 100)
+sprites.on_overlap(SpriteKind.player, SpriteKind.food, find_note)
+
+def create_escape():
+    tilesAdvanced.swap_all_tiles(assets.tile("open door"), assets.tile("closed door"))
+    closed_doors = tiles.get_tiles_by_type(assets.tile("closed door"))
+    exit = closed_doors[randint(0, len(closed_doors) - 1)]
+    tiles.set_tile_at(exit, assets.tile("open door"))
+
+def open_chest(robber, chest):
+    # info.change_score_by(1000)
+    # sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
+    # music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
+    # setup_level()
+    global opened_chest
+    if not opened_chest:
+        answer = game.ask_for_number("What is the code?", 4)
+        if str(answer) == code:
+            opened_chest = True
+            info.change_score_by(1000)
+            music.play(music.melody_playable(music.siren), music.PlaybackMode.UNTIL_DONE)
+            create_escape()
+        else:
+            tiles.place_on_tile(robber, robber.tilemap_location())
+scene.on_overlap_tile(SpriteKind.player, assets.tile("chest"), open_chest)
+
+# def reach_chest(robber, chest):
+    # info.change_score_by(1000)
+    # sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
+    # music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
+    # setup_level()
+# scene.on_overlap_tile(SpriteKind.player, assets.tile("chest"), reach_chest)
+
+def escape(robber, door):
+    if opened_chest:
+        info.change_score_by(1000)
+        music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
+        sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
+        setup_level()
+scene.on_overlap_tile(SpriteKind.player, assets.tile("open door"), escape)
 
 def caught(robber, guard):
     game.over(False)
