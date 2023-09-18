@@ -60,13 +60,6 @@ def open_chest(robber, chest):
             tiles.place_on_tile(robber, robber.tilemap_location())
 scene.on_overlap_tile(SpriteKind.player, assets.tile("chest"), open_chest)
 
-# def reach_chest(robber, chest):
-    # info.change_score_by(1000)
-    # sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-    # music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
-    # setup_level()
-# scene.on_overlap_tile(SpriteKind.player, assets.tile("chest"), reach_chest)
-
 def escape(robber, door):
     if opened_chest:
         info.change_score_by(1000)

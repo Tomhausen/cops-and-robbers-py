@@ -67,12 +67,6 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`chest`, function open_chest(r
     }
     
 })
-//  def reach_chest(robber, chest):
-//  info.change_score_by(1000)
-//  sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-//  music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
-//  setup_level()
-//  scene.on_overlap_tile(SpriteKind.player, assets.tile("chest"), reach_chest)
 scene.onOverlapTile(SpriteKind.Player, assets.tile`open door`, function escape(robber: Sprite, door: tiles.Location) {
     if (opened_chest) {
         info.changeScoreBy(1000)
