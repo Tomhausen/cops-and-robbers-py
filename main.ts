@@ -33,6 +33,7 @@ function spawn_guard() {
     let guard = sprites.create(assets.image`guard`, SpriteKind.Enemy)
     tiles.placeOnRandomTile(guard, assets.tile`guard spawn`)
     sprites.setDataBoolean(guard, "searching", false)
+    sprites.setDataString(guard, "colour", "blue")
     idle_behaviour(guard, guard.tilemapLocation())
 }
 
@@ -120,6 +121,29 @@ function guard_behaviour(guard: Sprite) {
     
 }
 
+function alerted(guard: Sprite) {
+    if (scene.spriteIsFollowingPath(guard)) {
+        if (sprites.readDataString(guard, "colour") == "blue") {
+            guard.image.replace(8, 2)
+            sprites.setDataString(guard, "colour", "red")
+        } else {
+            guard.image.replace(2, 8)
+            sprites.setDataString(guard, "colour", "blue")
+        }
+        
+        guard.say("!")
+    } else {
+        guard.image.replace(2, 8)
+        guard.say("")
+    }
+    
+}
+
+game.onUpdateInterval(500, function update_interval() {
+    for (let guard of sprites.allOfKind(SpriteKind.Enemy)) {
+        alerted(guard)
+    }
+})
 game.onUpdate(function tick() {
     for (let guard of sprites.allOfKind(SpriteKind.Enemy)) {
         guard_behaviour(guard)

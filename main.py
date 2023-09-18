@@ -31,6 +31,7 @@ def spawn_guard():
     guard = sprites.create(assets.image("guard"), SpriteKind.enemy)
     tiles.place_on_random_tile(guard, assets.tile("guard spawn"))
     sprites.set_data_boolean(guard, "searching", False)
+    sprites.set_data_string(guard, "colour", "blue")
     idle_behaviour(guard, guard.tilemap_location())
 
 def find_note(robber, note):
@@ -99,6 +100,24 @@ def guard_behaviour(guard: Sprite):
             sprites.set_data_boolean(guard, "following", False)
             path = scene.a_star(guard.tilemap_location(), robber.tilemap_location())
             scene.follow_path(guard, path)
+
+def alerted(guard: Sprite):
+    if scene.sprite_is_following_path(guard):
+        if sprites.read_data_string(guard, "colour") == "blue":
+            guard.image.replace(8, 2)
+            sprites.set_data_string(guard, "colour", "red")
+        else:
+            guard.image.replace(2, 8)
+            sprites.set_data_string(guard, "colour", "blue")
+        guard.say("!")
+    else:
+        guard.image.replace(2, 8)
+        guard.say("")
+
+def update_interval():
+    for guard in sprites.all_of_kind(SpriteKind.enemy):
+        alerted(guard)
+game.on_update_interval(500, update_interval)
 
 def tick():
     for guard in sprites.all_of_kind(SpriteKind.enemy):
