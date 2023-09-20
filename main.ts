@@ -6,16 +6,19 @@ let opened_chest = false
 let robber = sprites.create(assets.image`robber`, SpriteKind.Player)
 controller.moveSprite(robber)
 scene.cameraFollowSprite(robber)
-function generate_code() {
-    
-    code = "" + randint(0, 9999)
-    while (code.length < 4) {
-        code = "0" + code
+//  robber.set_flag(SpriteFlag.GHOST_THROUGH_WALLS, True)
+spriteutils.setConsoleOverlay(true)
+function convert_code(value: string): string {
+    //  
+    while (value.length < 4) {
+        value = "0" + value
     }
+    return value
 }
 
 function setup_level() {
     
+    //  
     opened_chest = false
     scene.setTileMapLevel(assets.tilemap`level`)
     tiles.placeOnRandomTile(robber, assets.tile`open door`)
@@ -25,9 +28,11 @@ function setup_level() {
     tilesAdvanced.swapAllTiles(assets.tile`guard spawn`, assets.tile`floor`)
     let note = sprites.create(assets.image`note`, SpriteKind.Food)
     tiles.placeOnRandomTile(note, assets.tile`floor`)
-    generate_code()
+    tiles.placeOnTile(note, robber.tilemapLocation())
+    code = convert_code("" + randint(0, 9999))
 }
 
+//  
 setup_level()
 function spawn_guard() {
     let guard = sprites.create(assets.image`guard`, SpriteKind.Enemy)
@@ -48,15 +53,15 @@ function create_escape() {
 }
 
 scene.onOverlapTile(SpriteKind.Player, assets.tile`chest`, function open_chest(robber: Sprite, chest: tiles.Location) {
-    let answer: number;
+    let answer: string;
     //  info.change_score_by(1000)
     //  sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
     //  music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
     //  setup_level()
     
     if (!opened_chest) {
-        answer = game.askForNumber("What is the code?", 4)
-        if ("" + answer == code) {
+        answer = "" + game.askForNumber("What is the code?", 4)
+        if (convert_code(answer) == code) {
             opened_chest = true
             info.changeScoreBy(1000)
             music.play(music.melodyPlayable(music.siren), music.PlaybackMode.UntilDone)
@@ -77,9 +82,11 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`open door`, function escape(r
     }
     
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function caught(robber: Sprite, guard: Sprite) {
+function caught(robber: any, guard: any) {
     game.over(false)
-})
+}
+
+//  sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, caught)
 function idle_behaviour(guard: Sprite, location: tiles.Location) {
     let y_vel: number;
     let x_vel: number;

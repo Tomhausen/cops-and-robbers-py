@@ -7,15 +7,17 @@ opened_chest = False
 robber = sprites.create(assets.image("robber"), SpriteKind.player)
 controller.move_sprite(robber)
 scene.camera_follow_sprite(robber)
+# robber.set_flag(SpriteFlag.GHOST_THROUGH_WALLS, True)
 
-def generate_code():
-    global code
-    code = str(randint(0, 9999))
-    while len(code) < 4:
-        code = "0" + code
+spriteutils.set_console_overlay(True)
+
+def convert_code(value: str): # 
+    while len(value) < 4:
+        value = "0" + value
+    return value
 
 def setup_level():
-    global opened_chest
+    global opened_chest, code # 
     opened_chest = False
     scene.set_tile_map_level(assets.tilemap("level"))
     tiles.place_on_random_tile(robber, assets.tile("open door"))
@@ -24,7 +26,8 @@ def setup_level():
     tilesAdvanced.swap_all_tiles(assets.tile("guard spawn"), assets.tile("floor"))
     note = sprites.create(assets.image("note"), SpriteKind.food)
     tiles.place_on_random_tile(note, assets.tile("floor"))
-    generate_code()
+    tiles.place_on_tile(note, robber.tilemap_location())
+    code = convert_code(str(randint(0, 9999))) # 
 setup_level()
 
 def spawn_guard():
@@ -51,8 +54,8 @@ def open_chest(robber, chest):
     # setup_level()
     global opened_chest
     if not opened_chest:
-        answer = game.ask_for_number("What is the code?", 4)
-        if str(answer) == code:
+        answer = str(game.ask_for_number("What is the code?", 4))
+        if convert_code(answer) == code:
             opened_chest = True
             info.change_score_by(1000)
             music.play(music.melody_playable(music.siren), music.PlaybackMode.UNTIL_DONE)
@@ -71,7 +74,7 @@ scene.on_overlap_tile(SpriteKind.player, assets.tile("open door"), escape)
 
 def caught(robber, guard):
     game.over(False)
-sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, caught)
+# sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, caught)
 
 def idle_behaviour(guard: Sprite, location):
     if guard.vx != 0:
