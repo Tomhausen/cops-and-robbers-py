@@ -11,13 +11,13 @@ scene.camera_follow_sprite(robber)
 
 spriteutils.set_console_overlay(True)
 
-def convert_code(value: str): # 
+def convert_code(value: str):
     while len(value) < 4:
         value = "0" + value
     return value
 
 def setup_level():
-    global opened_chest, code # 
+    global opened_chest, code
     opened_chest = False
     scene.set_tile_map_level(assets.tilemap("level"))
     tiles.place_on_random_tile(robber, assets.tile("open door"))
@@ -27,7 +27,7 @@ def setup_level():
     note = sprites.create(assets.image("note"), SpriteKind.food)
     tiles.place_on_random_tile(note, assets.tile("floor"))
     tiles.place_on_tile(note, robber.tilemap_location())
-    code = convert_code(str(randint(0, 9999))) # 
+    code = convert_code(str(randint(0, 9999)))
 setup_level()
 
 def spawn_guard():
@@ -48,10 +48,10 @@ def create_escape():
     tiles.set_tile_at(exit, assets.tile("open door"))
 
 def open_chest(robber, chest):
-    # info.change_score_by(1000)
-    # sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-    # music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
-    # setup_level()
+    info.change_score_by(1000)
+    sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
+    music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
+    setup_level()
     global opened_chest
     if not opened_chest:
         answer = str(game.ask_for_number("What is the code?", 4))

@@ -9,7 +9,6 @@ scene.cameraFollowSprite(robber)
 //  robber.set_flag(SpriteFlag.GHOST_THROUGH_WALLS, True)
 spriteutils.setConsoleOverlay(true)
 function convert_code(value: string): string {
-    //  
     while (value.length < 4) {
         value = "0" + value
     }
@@ -18,7 +17,6 @@ function convert_code(value: string): string {
 
 function setup_level() {
     
-    //  
     opened_chest = false
     scene.setTileMapLevel(assets.tilemap`level`)
     tiles.placeOnRandomTile(robber, assets.tile`open door`)
@@ -32,7 +30,6 @@ function setup_level() {
     code = convert_code("" + randint(0, 9999))
 }
 
-//  
 setup_level()
 function spawn_guard() {
     let guard = sprites.create(assets.image`guard`, SpriteKind.Enemy)
@@ -54,10 +51,10 @@ function create_escape() {
 
 scene.onOverlapTile(SpriteKind.Player, assets.tile`chest`, function open_chest(robber: Sprite, chest: tiles.Location) {
     let answer: string;
-    //  info.change_score_by(1000)
-    //  sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-    //  music.play(music.melody_playable(music.ba_ding), music.PlaybackMode.UNTIL_DONE)
-    //  setup_level()
+    info.changeScoreBy(1000)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+    setup_level()
     
     if (!opened_chest) {
         answer = "" + game.askForNumber("What is the code?", 4)
